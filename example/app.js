@@ -72,7 +72,11 @@ const users = [{
 }, {
   id: 2,
   name: 'Jane'
-}]
+},
+    {
+        id: 2,
+        name: 'Jane'
+    }]
 let userIdCounter = users.length
 
 // The aws-serverless-express library creates a server and listens on a Unix
