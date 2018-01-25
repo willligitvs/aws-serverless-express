@@ -2,12 +2,22 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Serverless Express Application/API powered by API Gateway and Lambda
+Parameters:
+  Stage:
+    Type: String
+    AllowedValues:
+      - prod
+      - test
+      - uat
+    Description: Enter test, uat, prod.
+
 Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
       DefinitionUri: ./simple-proxy-api.yaml
-      StageName: prod
+      StageName:
+        Ref: Stage
       Variables:
         ServerlessExpressLambdaFunctionName: !Ref helloWorld
 
@@ -95,7 +105,7 @@ Outputs:
         - !Ref AWS::Region
         - "#/apis/"
         - !Ref ApiGatewayApi
-        - "/stages/prod"
+        - "/stages/${Stage}/"
 
   ApiUrl:
     Description: Invoke URL for your API. Clicking this link will perform a GET request
@@ -106,4 +116,4 @@ Outputs:
         - !Ref ApiGatewayApi
         - ".execute-api."
         - !Ref AWS::Region
-        - ".amazonaws.com/prod/"
+        - ".amazonaws.com/${Stage}/"
