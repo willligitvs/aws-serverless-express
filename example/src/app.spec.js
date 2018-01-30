@@ -1,3 +1,5 @@
+'use strict';
+
 const request = require('supertest-as-promised');
 const chai = require('chai'), expect = chai.expect;
 const app = require('./app');

@@ -1,0 +1,5 @@
+{
+  "CRYPTO_BYTE_SIZE": 128,
+  "DDB_TABLE": "PocDynamodbNodeUserTable"
+
+}

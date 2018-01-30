@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Serverless Express Application/API powered by API Gateway and Lambda
 Parameters:
-  Stage:
+  Environment:
     Type: String
     AllowedValues:
       - prod
@@ -17,7 +17,7 @@ Resources:
     Properties:
       DefinitionUri: ./simple-proxy-api.yaml
       StageName:
-        Ref: Stage
+        Ref: Environment
       Variables:
         ServerlessExpressLambdaFunctionName: !Ref helloWorld
 
@@ -63,12 +63,16 @@ Resources:
   helloWorld:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./
+      CodeUri: ./src
       Handler: lambda.handler
       MemorySize: 1024
       Role: !GetAtt LambdaExecutionRole.Arn
       Runtime: nodejs6.10
       Timeout: 30
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref UserTable
+          Environment: !Ref Environment
       Events:
         ProxyApiRoot:
           Type: Api
@@ -82,7 +86,30 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
             Path: /{proxy+}
             Method: ANY
-
+      Policies:
+       - AWSLambdaExecute # Managed Policy
+       - Version: '2012-10-17' # Policy Document
+         Statement:
+           - Effect: Allow
+             Action:
+               - dynamodb:GetItem
+               - dynamodb:PutItem
+             Resource: !GetAtt UserTable.Arn # !Sub "${UserTable.Arn}"
+  UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        #TableName: !Sub "Table-${Stage}"
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
 Outputs:
   LambdaFunctionConsoleUrl:
     Description: Console URL for the Lambda Function.
@@ -105,7 +132,7 @@ Outputs:
         - !Ref AWS::Region
         - "#/apis/"
         - !Ref ApiGatewayApi
-        - "/stages/${Stage}/"
+        - "/stages/${Environment}/"
 
   ApiUrl:
     Description: Invoke URL for your API. Clicking this link will perform a GET request
@@ -116,4 +143,7 @@ Outputs:
         - !Ref ApiGatewayApi
         - ".execute-api."
         - !Ref AWS::Region
-        - ".amazonaws.com/${Stage}/"
+        - ".amazonaws.com/${Environment}/"
+  DDB:
+    Description: DynamoDB User Table
+    Value: !Ref UserTable
