@@ -10,10 +10,10 @@ module.exports = function (env) {
     return functionsToBuild
         .map(fxn => ({
             context: path.resolve(__dirname),
-            entry: path.join(lambdaFunctionDir, fxn, 'index.js'),
+            entry: path.join(lambdaFunctionDir, fxn, 'lambda.js'),
             output: {
                 path: path.join(__dirname, 'dist', fxn),
-                filename: 'index.js',
+                filename: 'lambda.js',
                 libraryTarget: 'commonjs2'
             },
             module: {
@@ -43,13 +43,13 @@ module.exports = function (env) {
             resolve: {
                 extensions: ['.js']
             },
-            plugins: [
+            /*plugins: [
                 new ZipPlugin({
                     path: path.join(__dirname, 'dist', fxn),
                     pathPrefix: '',
                     filename: `${fxn}.zip`
                 })
-            ],
+            ],*/
             target: 'node',
             externals: {
                 // These modules are already installed on the Lambda instance.

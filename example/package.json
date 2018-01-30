@@ -11,7 +11,7 @@
     "accountId": "293499315857"
   },
   "scripts": {
-    "start": "node src/app.local.js",
+    "start": "node src/api/app.local.js",
     "config": "node ./scripts/configure.js",
     "deconfig": "node ./scripts/deconfigure.js",
     "local": "node scripts/local",
@@ -35,7 +35,8 @@
     "win-delete-stack": "aws cloudformation delete-stack --stack-name %npm_package_config_cloudFormationStackName% --region %npm_package_config_region%",
     "win-setup": "npm install && (aws s3api get-bucket-location --bucket %npm_package_config_s3BucketName% --region %npm_package_config_region% || npm run win-create-bucket) && npm run win-package-deploy",
     "test": "./node_modules/.bin/mocha ./src/* --recursive",
-    "hint": "./node_modules/.bin/jshint ./src/*.js"
+    "hint": "./node_modules/.bin/jshint ./src/*.js",
+    "webpack": "./node_modules/.bin/webpack"
   },
   "license": "Apache-2.0",
   "dependencies": {

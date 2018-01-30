@@ -8,8 +8,9 @@ This guide assumes you have already [set up an AWS account](http://docs.aws.amaz
 1. From your preferred project directory: `git clone https://github.com/awslabs/aws-serverless-express.git && cd aws-serverless-express/example`.
 2. Run `npm run config -- --account-id="293499315857" --bucket-name="data-lake-poc-lambda-express" [--region="<region>" --function-name="<functionName>"]` to configure the example, eg. `npm run config -- --account-id="123456789012" --bucket-name="my-unique-bucket"`. This modifies `package.json`, `simple-proxy-api.yaml` and `cloudformation.yaml` with your account ID, bucket, region and function name (region defaults to `us-east-1` and function name defaults to `AwsServerlessExpressFunction`). If the bucket you specify does not yet exist, the next step will create it for you. This step modifies the existing files in-place; if you wish to make changes to these settings, you will need to modify `package.json`, `simple-proxy-api.yaml` and `cloudformation.yaml` manually.
 3.1 Run `npm run setup` (Windows users: `npm run win-setup`) - this installs the node dependencies, creates an S3 bucket (if it does not already exist), packages and deploys your serverless Express application to AWS Lambda, and creates an API Gateway proxy API.
-3.2 Run npm run package (to update the cloudformation template from SAM)
-3.3 run
+3.2 Run `npm run package` (to update the cloudformation template from SAM)
+3.3 `npm run webpack` (to zip the lambda bundles that have external dependencies as well as subfolder dependencies)
+3.4 run
 ``
 aws cloudformation deploy --template-file packaged-sam.yaml --parameter-overrides Environment=test --stack-name data-lake-poc-lambda-express --capabilities CAPABILITY_IAM
 ``
